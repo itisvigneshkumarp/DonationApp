@@ -19,7 +19,7 @@ class _DonationDetailPageTwoState extends State<DonationDetailPageTwo> {
   Map<String, dynamic> donation;
   String donationId;
   var _isLoading = false;
-  // var _itemWinner;
+  var _itemWinner = "No winner selected.";
 
   void _showErrorDialog(String message) {
     showDialog(
@@ -135,6 +135,10 @@ class _DonationDetailPageTwoState extends State<DonationDetailPageTwo> {
           .doc(donationId)
           .get();
       String _winnerId = _donation.data()["peopleRequested"][0]["userId"];
+      String _winnerName = _donation.data()["peopleRequested"][0]["userName"];
+      setState(() {
+        _itemWinner = _winnerName;
+      });
 
       await FirebaseFirestore.instance
           .collection('donations')
@@ -374,29 +378,12 @@ class _DonationDetailPageTwoState extends State<DonationDetailPageTwo> {
                     ),
                   ),
                 ),
-                FutureBuilder(
-                  future: _getUserName(donationId),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return CircularProgressIndicator();
-                    }
-                    if (snapshot.hasData) {
-                      return Card(
-                        color: Theme.of(context).accentColor,
-                        child: Text(
-                          snapshot.data.toString(),
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      );
-                    }
-                    return Card(
-                      color: Theme.of(context).accentColor,
-                      child: Text(
-                        "No Winner.",
-                        style: TextStyle(fontSize: 18),
-                      ),
-                    );
-                  },
+                Card(
+                  color: Theme.of(context).accentColor,
+                  child: Text(
+                    _itemWinner,
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
                 Container(
                   child: Align(
