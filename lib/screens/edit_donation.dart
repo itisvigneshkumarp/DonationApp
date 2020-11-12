@@ -12,16 +12,7 @@ class _EditDonationScreenState extends State<EditDonationScreen> {
   final CollectionReference donations =
       FirebaseFirestore.instance.collection('donations');
 
-  var _categories = [
-    "Fashion",
-    "Electronics",
-    "Home Appliances",
-    "Education",
-    "Other"
-  ];
-
   var _updatedItemName;
-  var _updatedItemCategory;
   var _updatedItemLocation;
   var _updatedItemDescription;
 
@@ -45,40 +36,6 @@ class _EditDonationScreenState extends State<EditDonationScreen> {
         },
         onSaved: (String newValue) {
           _updatedItemName = newValue;
-        },
-      );
-    }
-
-    Widget _buildItemCategory(String itemCategory) {
-      return FormField<String>(
-        initialValue: itemCategory,
-        builder: (FormFieldState<String> state) {
-          return InputDecorator(
-            decoration: InputDecoration(
-              labelText: "Item Category",
-              labelStyle: TextStyle(fontSize: 20.0),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: _updatedItemCategory,
-                isDense: true,
-                onChanged: (String newValue) {
-                  setState(() {
-                    _updatedItemCategory = newValue;
-                  });
-                },
-                style: TextStyle(
-                  color: Theme.of(context).primaryColor,
-                ),
-                items: _categories.map((String value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
-              ),
-            ),
-          );
         },
       );
     }
@@ -134,7 +91,6 @@ class _EditDonationScreenState extends State<EditDonationScreen> {
               .doc(donationId)
               .update({
             'itemName': _updatedItemName,
-            'itemCategory': _updatedItemCategory,
             'itemLocation': _updatedItemLocation,
             'itemDescription': _updatedItemDescription,
           });
@@ -174,7 +130,6 @@ class _EditDonationScreenState extends State<EditDonationScreen> {
                   // mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     _buildItemName(donation["itemName"]),
-                    _buildItemCategory(donation["itemCategory"]),
                     _buildItemLocation(donation["itemLocation"]),
                     _buildItemDescription(donation["itemDescription"]),
                     SizedBox(

@@ -62,14 +62,23 @@ class _DonationDetailPageTwoState extends State<DonationDetailPageTwo> {
     );
   }
 
-  Future<String> _getUserName(String donationId) async {
+  Future<String> _getWinner(String donationId) async {
     try {
       DocumentSnapshot _donation = await FirebaseFirestore.instance
           .collection('donations')
           .doc(donationId)
           .get();
-      String _userName = _donation.data()["peopleRequested"][0]["userName"];
-      return _userName;
+
+      String _itemWinner = _donation.data()["itemWinner"];
+      if (_itemWinner == null) {
+        return "";
+      } else {
+        DocumentSnapshot documentSnapshot = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(_itemWinner.toString())
+            .get();
+        return documentSnapshot.data()['username'].toString();
+      }
     } on PlatformException catch (error) {
       print(error.message);
       return null;
@@ -137,10 +146,6 @@ class _DonationDetailPageTwoState extends State<DonationDetailPageTwo> {
           .doc(donationId)
           .get();
       String _winnerId = _donation.data()["peopleRequested"][0]["userId"];
-      // String _winnerName = _donation.data()["peopleRequested"][0]["userName"];
-      // setState(() {
-      //   _itemWinner = _winnerName;
-      // });
 
       await FirebaseFirestore.instance
           .collection('donations')
@@ -380,23 +385,23 @@ class _DonationDetailPageTwoState extends State<DonationDetailPageTwo> {
                     ),
                   ),
                 ),
-                if (donation["itemWinner"] == null)
-                  Card(
-                    color: Theme.of(context).accentColor,
-                    child: Text(
-                      "No winner selected.",
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ),
                 FutureBuilder<String>(
-                  future: _getUserName(donationId),
+                  future: _getWinner(donationId),
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return Center(
                         child: CircularProgressIndicator(),
                       );
                     }
-                    if (snapshot.hasData) {
+                    if (snapshot.hasData && snapshot.data == "") {
+                      return Card(
+                        color: Theme.of(context).accentColor,
+                        child: Text(
+                          "No winner selected.",
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      );
+                    } else {
                       return Card(
                         color: Theme.of(context).accentColor,
                         child: Text(
@@ -405,9 +410,6 @@ class _DonationDetailPageTwoState extends State<DonationDetailPageTwo> {
                         ),
                       );
                     }
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
                   },
                 ),
                 Container(
