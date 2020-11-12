@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class DonationCardView extends StatelessWidget {
@@ -6,10 +7,10 @@ class DonationCardView extends StatelessWidget {
   final String itemName;
   final String itemLocation;
   final String itemCategory;
-  final String itemDescription;
-  final String itemImage;
   final String donorId;
   final String donorName;
+  final String itemDescription;
+  final String itemImage;
   final String itemWinner;
   final List peopleRequested;
 
@@ -18,11 +19,11 @@ class DonationCardView extends StatelessWidget {
     this.itemName,
     this.itemLocation,
     this.itemCategory,
+    this.donorId,
+    this.donorName,
     this.itemDescription,
     this.itemImage,
     this.itemWinner,
-    this.donorId,
-    this.donorName,
     this.peopleRequested,
   );
 
@@ -67,7 +68,7 @@ class DonationCardView extends StatelessWidget {
                 },
               ),
             ],
-          )
+          ),
         ],
       ),
     );

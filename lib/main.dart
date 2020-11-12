@@ -1,3 +1,4 @@
+import 'package:DonationApp/screens/edit_donation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Donation App',
       theme: ThemeData(
         primarySwatch: Colors.teal,
@@ -57,6 +59,7 @@ class MyApp extends StatelessWidget {
         "/main": (context) => MyApp(),
         "/home": (context) => HomeScreen(),
         "/add_donation": (context) => AddDonationScreen(),
+        "/edit_donation": (context) => EditDonationScreen(),
         "/donation_details": (context) => DonationDetailScreen(),
         "/items_donated": (context) => ItemsDonatedView(),
         "/items_requested": (context) => ItemsRequestedView(),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../widgets/donationdetail_pageone.dart';
@@ -23,6 +24,21 @@ class DonationDetailScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(
             title: Text(donation['itemName']),
+            actions: [
+              if (FirebaseAuth.instance.currentUser.uid == donation["donorId"])
+                IconButton(
+                  icon: Icon(
+                    Icons.edit_outlined,
+                    color: Theme.of(context).primaryIconTheme.color,
+                  ),
+                  onPressed: () {
+                    Navigator.of(context).pushNamed(
+                      "/edit_donation",
+                      arguments: donationId,
+                    );
+                  },
+                ),
+            ],
           ),
           backgroundColor: Theme.of(context).backgroundColor,
           body: PageView(

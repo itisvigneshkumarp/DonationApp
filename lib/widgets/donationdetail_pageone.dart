@@ -74,22 +74,6 @@ class DonationDetailPageOne extends StatelessWidget {
               style: TextStyle(fontSize: 18),
             ),
           ),
-          // Container(
-          //   margin: EdgeInsets.symmetric(vertical: 10),
-          //   child: Text(
-          //     "Donor ID",
-          //     style: TextStyle(
-          //       fontSize: 20,
-          //       fontWeight: FontWeight.bold,
-          //     ),
-          //   ),
-          // ),
-          // Card(
-          //   child: Text(
-          //     donation['donorId'],
-          //     style: TextStyle(fontSize: 18),
-          //   ),
-          // ),
           Container(
             margin: EdgeInsets.symmetric(vertical: 10),
             child: Text(
