@@ -19,7 +19,6 @@ class _DonationDetailPageTwoState extends State<DonationDetailPageTwo> {
   Map<String, dynamic> donation;
   String donationId;
   var _isLoading = false;
-  var _itemWinner = "No winner selected.";
 
   void _showErrorDialog(String message) {
     showDialog(
@@ -107,19 +106,22 @@ class _DonationDetailPageTwoState extends State<DonationDetailPageTwo> {
       var _isUser = _donation
           .data()["peopleRequested"]
           .map((e) => e.userId == FirebaseAuth.instance.currentUser.uid);
-      if (_isUser.length != 0) {
+
+      print(_isUser.length);
+      if (_isUser.length == 0) {
         return true;
+      } else {
+        return false;
       }
-      return false;
     } on PlatformException catch (error) {
-      var message = "An error occurred.";
+      var message = "An error occurred 1.";
       if (error.message != null) {
         message = error.message;
       }
       _showErrorDialog(message);
       return false;
     } catch (error) {
-      var message = "An error occurred.";
+      var message = "An error occurred 2.";
       _showErrorDialog(message);
       return false;
     }
@@ -135,10 +137,10 @@ class _DonationDetailPageTwoState extends State<DonationDetailPageTwo> {
           .doc(donationId)
           .get();
       String _winnerId = _donation.data()["peopleRequested"][0]["userId"];
-      String _winnerName = _donation.data()["peopleRequested"][0]["userName"];
-      setState(() {
-        _itemWinner = _winnerName;
-      });
+      // String _winnerName = _donation.data()["peopleRequested"][0]["userName"];
+      // setState(() {
+      //   _itemWinner = _winnerName;
+      // });
 
       await FirebaseFirestore.instance
           .collection('donations')
@@ -269,7 +271,7 @@ class _DonationDetailPageTwoState extends State<DonationDetailPageTwo> {
             child: CircularProgressIndicator(),
           );
         }
-        if (snapshot.data == true) {
+        if (snapshot.data == false) {
           return ButtonTheme(
             height: 50,
             minWidth: 250,
@@ -279,7 +281,7 @@ class _DonationDetailPageTwoState extends State<DonationDetailPageTwo> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: RaisedButton(
-              child: Text("Request Item"),
+              child: Text("Already Requested"),
               onPressed: null,
             ),
           );
@@ -378,12 +380,35 @@ class _DonationDetailPageTwoState extends State<DonationDetailPageTwo> {
                     ),
                   ),
                 ),
-                Card(
-                  color: Theme.of(context).accentColor,
-                  child: Text(
-                    _itemWinner,
-                    style: TextStyle(fontSize: 18),
+                if (donation["itemWinner"] == null)
+                  Card(
+                    color: Theme.of(context).accentColor,
+                    child: Text(
+                      "No winner selected.",
+                      style: TextStyle(fontSize: 18),
+                    ),
                   ),
+                FutureBuilder<String>(
+                  future: _getUserName(donationId),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    if (snapshot.hasData) {
+                      return Card(
+                        color: Theme.of(context).accentColor,
+                        child: Text(
+                          snapshot.data,
+                          style: TextStyle(fontSize: 18),
+                        ),
+                      );
+                    }
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  },
                 ),
                 Container(
                   child: Align(
