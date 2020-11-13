@@ -220,6 +220,7 @@ class _DonationDetailPageTwoState extends State<DonationDetailPageTwo> {
           .doc(donationId)
           .delete();
       _showMessageDialog("Donation deleted successfully.");
+      Navigator.of(context).pushNamed("/home");
     } on PlatformException catch (error) {
       var message = "An error occurred, could'nt delete donation.";
       if (error.message != null) {
@@ -426,7 +427,8 @@ class _DonationDetailPageTwoState extends State<DonationDetailPageTwo> {
                           SizedBox(
                             height: 20,
                           ),
-                          if (_checkIsDonor(donation["donorId"]))
+                          if (_checkIsDonor(donation["donorId"]) &&
+                              donation["itemWinner"] == null)
                             ButtonTheme(
                               height: 50,
                               minWidth: 250,
